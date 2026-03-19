@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mon Mini Clone des Sims</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f8ff;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-top: 50px;
+        }
+        .sim-container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            width: 300px;
+            text-align: center;
+        }
+        .stat {
+            margin: 10px 0;
+            text-align: left;
+        }
+        .bar-container {
+            width: 100%;
+            background-color: #ddd;
+            border-radius: 5px;
+            overflow: hidden;
+        }
+        .bar {
+            height: 20px;
+            width: 100%;
+            transition: width 0.3s;
+        }
+        #faim-bar { background-color: #ff4c4c; }
+        #energie-bar { background-color: #ffd700; }
+        #joie-bar { background-color: #4caf50; }
+        
+        .actions {
+            margin-top: 20px;
+            display: flex;
+            justify-content: space-between;
+        }
+        button {
+            padding: 10px;
+            cursor: pointer;
+            border: none;
+            border-radius: 5px;
+            background-color: #007bff;
+            color: white;
+            font-weight: bold;
+        }
+        button:hover { background-color: #0056b3; }
+        #message {
+            margin-top: 15px;
+            font-weight: bold;
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="sim-container">
+        <h2>Mon Personnage</h2>
+        
+        <div class="stat">
+            <label>Faim</label>
+            <div class="bar-container"><div id="faim-bar" class="bar"></div></div>
+        </div>
+        <div class="stat">
+            <label>Énergie</label>
+            <div class="bar-container"><div id="energie-bar" class="bar"></div></div>
+        </div>
+        <div class="stat">
+            <label>Joie</label>
+            <div class="bar-container"><div id="joie-bar" class="bar"></div></div>
+        </div>
+
+        <div class="actions">
+            <button onclick="manger()">Manger</button>
+            <button onclick="dormir()">Dormir</button>
+            <button onclick="jouer()">Jouer</button>
+        </div>
+
+        <div id="message">Le personnage va bien !</div>
+    </div>
+
+    <script>
+        // Statistiques de base (0 à 100)
+        let faim = 100;
+        let energie = 100;
+        let joie = 100;
+
+        // Fonction pour mettre à jour l'affichage
+        function updateUI() {
+            document.getElementById('faim-bar').style.width = faim + '%';
+            document.getElementById('energie-bar').style.width = energie + '%';
+            document.getElementById('joie-bar').style.width = joie + '%';
+
+            // Vérifier si le personnage est triste ou épuisé
+            if (faim <= 0 || energie <= 0 || joie <= 0) {
+                document.getElementById('message').innerText = "Le personnage va très mal ! Faites quelque chose !";
+                document.getElementById('message').style.color = "red";
+            } else {
+                document.getElementById('message').innerText = "Le personnage va bien !";
+                document.getElementById('message').style.color = "#333";
+            }
+        }
+
+        // Actions
+        function manger() {
+            if (faim < 100) faim += 20;
+            if (faim > 100) faim = 100;
+            updateUI();
+        }
+
+        function dormir() {
+            if (energie < 100) energie += 30;
+            if (energie > 100) energie = 100;
+            updateUI();
+        }
+
+        function jouer() {
+            if (joie < 100) joie += 20;
+            if (energie > 10) energie -= 10; // Jouer fatigue
+            if (joie > 100) joie = 100;
+            updateUI();
+        }
+
+        // Boucle de temps : les besoins diminuent chaque seconde
+        setInterval(() => {
+            faim -= 2;
+            energie -= 1;
+            joie -= 1.5;
+
+            // Empêcher de descendre en dessous de 0
+            if (faim < 0) faim = 0;
+            if (energie < 0) energie = 0;
+            if (joie < 0) joie = 0;
+
+            updateUI();
+        }, 1000); // 1000 millisecondes = 1 seconde
+    </script>
+
+</body>
+</html>
